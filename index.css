@@ -288,3 +288,7 @@
 .testimonial-swiper{
     width:100%;
 }
+
+.yt-embed-wrap iframe {
+  pointer-events: none;
+}
