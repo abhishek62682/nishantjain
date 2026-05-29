@@ -58,7 +58,6 @@
     "></div>
   </div>
 </div>
-
 <script>
 (function(){
   var loader = document.getElementById('njLoader');
@@ -81,13 +80,16 @@
     }, 400);
   }
 
-  var video = document.getElementById('heroVideo');
-  if(video){
-    video.addEventListener('canplay', hideLoader, { once: true });
-    setTimeout(hideLoader, 8000);
-  } else {
-    setTimeout(hideLoader, 3000);
-  }
+  // Wait for DOM ready, then hook into the video element
+  window.addEventListener('DOMContentLoaded', function(){
+    var video = document.getElementById('heroVideo');
+    if(video){
+      video.addEventListener('canplay', hideLoader, { once: true });
+      setTimeout(hideLoader, 8000);
+    } else {
+      setTimeout(hideLoader, 3000);
+    }
+  });
 })();
 </script>
 
@@ -122,7 +124,7 @@
   <!-- HERO SECTION -->
   <div class="relative w-full h-[100svh] md:h-screen z-[12] bg-black text-white overflow-hidden" data-scroll-section>
     <div class="absolute inset-0 bg-black/50 z-[1]"></div>
-    <video id="heroVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover"></video>
+    <video id="heroVideo" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover" src="./video.mp4"></video>
     <div class="relative z-10 h-full flex flex-col">
 
       <!-- NAVBAR -->
@@ -685,8 +687,7 @@
 })();
 </script>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+ 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.4/dist/locomotive-scroll.min.js"></script>
 
@@ -703,18 +704,7 @@
     }
   </script>
 
-  <script>
-    const video = document.getElementById('heroVideo');
-    const videoSrc = "https://video.squarespace-cdn.com/content/v1/6744250b81521d675423a80c/195d3cdc-63af-4ea0-af62-0fb3f2cfe860/playlist.m3u8";
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(video);
-    } else {
-      video.src = videoSrc;
-    }
-  </script>
-
+ 
   <script>
 (function(){
   const charDelay = 30, initialDelay = 200;
@@ -739,7 +729,6 @@
     setTimeout(() => document.getElementById('buttons').classList.add('active'), 1200);
   }
 
-  // Wait for loader to finish hiding, then animate
   var loaderDone = false;
   function onLoaderHidden() {
     if (loaderDone) return;
@@ -747,19 +736,18 @@
     startHeroAnimation();
   }
 
-  // The loader fades out over 0.5s then is hidden — total ~900ms after canplay
-  // We hook into the same video event + match the loader's timing
-  var video = document.getElementById('heroVideo');
-  if (video) {
-    video.addEventListener('canplay', function() {
-      // loader takes 400ms (fill to 100%) + 400ms (fade) = ~800ms before display:none
-      setTimeout(onLoaderHidden, 900);
-    }, { once: true });
-    // Match the loader's 8s fallback + its hide duration
-    setTimeout(onLoaderHidden, 9000);
-  } else {
-    setTimeout(onLoaderHidden, 3500);
-  }
+  window.addEventListener('DOMContentLoaded', function() {
+    var video = document.getElementById('heroVideo');
+    if (video) {
+      video.addEventListener('canplay', function() {
+        setTimeout(onLoaderHidden, 900);
+      }, { once: true });
+      setTimeout(onLoaderHidden, 9000);
+    } else {
+      setTimeout(onLoaderHidden, 3500);
+    }
+  });
+
 })();
 </script>
 
